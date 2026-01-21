@@ -1,0 +1,39 @@
+// 1. 定义回调函数
+defun my_hello_world_func()
+{
+    de_info("Hello! My first ADS custom tool.");
+}
+
+// 2. 定义菜单加载函数
+defun my_tool_load_menu(winType)
+{
+    // 检查是否为原理图窗口
+    if(winType == SCHEMATIC_WINDOW)
+    {
+        decl menuLabel = "MyToolsMenu";
+        decl itemLabel = "SayHello";
+        decl topMenuH, itemH;
+
+        // --- 步骤 A: 查找或创建顶级菜单 ---
+        if(!(topMenuH = api_find_menu(NULL, menuLabel)))
+        {
+            topMenuH = api_create_menu_cascade(menuLabel, "User Tools", API_MA_TEAROFF, NULL);
+            api_add_menu(NULL, topMenuH);
+        }
+
+        // --- 步骤 B: 查找或创建子菜单项 ---
+        // 修正逻辑：这里建议在 topMenuH (父菜单) 中查找，而不是 NULL
+        if(!(itemH = api_find_menu(topMenuH, itemLabel))) 
+        {
+             itemH = api_create_menu(itemLabel, "Click to Test", "my_hello_world_func", NULL, "", NULL);
+             api_add_menu(topMenuH, itemH);
+        }
+
+        // --- 步骤 C: 激活菜单项 ---
+        api_menu_manage(itemH, TRUE);
+
+    } // <--- 你之前漏掉了这个大括号，导致报错 "Statement block not closed"
+}
+
+// 3. 注册函数
+de_add_ads_ael_addon_menu_function("my_tool_load_menu");
