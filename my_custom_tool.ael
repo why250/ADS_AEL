@@ -11,8 +11,9 @@ defun my_tool_load_menu(winType)
     if(winType == SCHEMATIC_WINDOW)
     {
         decl menuLabel = "MyToolsMenu";
-        decl itemLabel = "SayHello";
-        decl topMenuH, itemH;
+        decl itemLabel1 = "SayHello";
+        decl itemLabel2 = "Matlab";
+        decl topMenuH, itemH1,itemH2;
 
         // --- 步骤 A: 查找或创建顶级菜单 ---
         if(!(topMenuH = api_find_menu(NULL, menuLabel)))
@@ -23,16 +24,23 @@ defun my_tool_load_menu(winType)
 
         // --- 步骤 B: 查找或创建子菜单项 ---
         // 修正逻辑：这里建议在 topMenuH (父菜单) 中查找，而不是 NULL
-        if(!(itemH = api_find_menu(topMenuH, itemLabel))) 
+        if(!(itemH1 = api_find_menu(topMenuH, itemLabel1))) 
         {
-             itemH = api_create_menu(itemLabel, "Click to Test", "my_hello_world_func", NULL, "", NULL);
-             api_add_menu(topMenuH, itemH);
+             itemH1 = api_create_menu(itemLabel1, "Click to Test", "my_hello_world_func", NULL, "", NULL);
+             api_add_menu(topMenuH, itemH1);
+        }
+
+        if(!(itemH2 = api_find_menu(topMenuH, itemLabel2))) 
+        {
+             itemH2 = api_create_menu(itemLabel2, "Click to Launch MATLAB", "launch_matlab_direct", NULL, "", NULL);
+             api_add_menu(topMenuH, itemH2);
         }
 
         // --- 步骤 C: 激活菜单项 ---
-        api_menu_manage(itemH, TRUE);
+        api_menu_manage(itemH1, TRUE);
+        api_menu_manage(itemH2, TRUE);
 
-    } // <--- 你之前漏掉了这个大括号，导致报错 "Statement block not closed"
+    } // 
 }
 
 // 3. 注册函数

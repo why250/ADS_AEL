@@ -1,0 +1,43 @@
+// ================================================================
+// AEL 脚本: 直接启动 MATLAB 并传递参数
+// ================================================================
+defun launch_matlab_direct()
+{
+    // --- 1. 获取 ADS 设计上下文信息 ---
+    decl winInst = api_get_current_window();
+    if (!de_window_has_valid_context(winInst)) {
+        de_error("请在原理图窗口运行此功能！");
+        return;
+    }
+    decl context = de_get_design_context(winInst);
+    
+    decl libName  = db_get_library_name(context);
+    decl cellName = db_get_cell_name(context);
+    decl viewName = db_get_view_name(context);
+    decl workDir  = getcwd(); // 获取当前工程目录作为 MATLAB 的工作目录
+
+    de_info(strcat("准备传输设计: ", libName, ":", cellName));
+
+    // --- 2. 构建 MATLAB 内部要执行的指令字符串 ---
+    // 目标格式: my_ads_processor('LibName', 'CellName', 'ViewName')
+    // 注意：MATLAB 字符串需要单引号，我们在 AEL 中拼接进去
+    
+    decl matFunc = "my_ads_processor"; // 这是您将在 MATLAB 侧编写的函数名
+    
+    decl matCmd = strcat(matFunc, "('", libName, "','", cellName, "','", viewName, "')");
+    
+    // --- 3. 构建 Linux 系统启动命令 ---
+    // 格式: nohup matlab -desktop -sd "路径" -r "指令" &
+    // -desktop: 启动图形界面 (若只需后台运行改用 -batch 或 -nodesktop)
+    // -sd: 设置 Startup Directory (启动目录)
+    // -r: 启动后自动运行括号里的语句
+    
+    decl sysCmd = strcat("nohup matlab -desktop -sd \"", workDir, "\" -r \"", matCmd, "\" &");
+
+    // --- 4. 调试与执行 ---
+    fputs(stderr, strcat("System Command: ", sysCmd, "\n")); // 打印到终端供检查
+    
+    system(sysCmd);
+    
+    de_info("已直接调用 MATLAB，请检查弹出的 MATLAB 窗口。");
+}

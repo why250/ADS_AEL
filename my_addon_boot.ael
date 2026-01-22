@@ -2,13 +2,13 @@
 // 修正后的 my_addon_boot.ael
 // ===============================================
 
-// 1. 获取当前工程目录 (Standard AEL function)
+// 1. 获取工具目录 
 decl TOOL_PATH = "/home/My_ADS_Addon";
 
 // 2. 打印调试信息
 de_info(strcat("正在从工程目录加载工具: ", TOOL_PATH));
 
 // 3. 加载工具文件
-// 注意：确保 my_custom_tool.ael 在你的工程文件夹里
-
+// 注意：确保 my_custom_tool.ael 在你的工具目录里
+load(strcat(TOOL_PATH, "/launch_matlab_tool.ael"));
 load(strcat(TOOL_PATH, "/my_custom_tool.ael"));
