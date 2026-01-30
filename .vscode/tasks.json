@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "ael",
+			"label": "ael: Compile active file",
+			"command": "aelcomp.exe",
+			"args": [
+				"-vscode",
+				"${file}",
+				"${fileDirname}/${fileBasenameNoExtension}.atf"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$aelcomp"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "The AEL compiler tool compiles files to check for syntax errors."
+		}
+	]
+}
